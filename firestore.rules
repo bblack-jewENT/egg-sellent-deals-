@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: mail
+    // Document ID: auto-generated
+    // Fields:
+    //   - to: string (required, email format) - The recipient's email address
+    //   - message: map (required) - Contains subject and html
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+    
+    // Helper Functions
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+    
+    function isValidEmailMessage() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['to', 'message', 'createdAt']) &&
+             isValidEmail(data.to) &&
+             data.message is map &&
+             data.message.keys().hasAll(['subject', 'html']) &&
+             data.message.subject is string &&
+             data.message.html is string &&
+             data.createdAt is timestamp;
+    }
+
+    match /mail/{mailId} {
+      // Allow anyone to create an email message (since we don't have user auth yet)
+      allow create: if isValidEmailMessage();
+      allow read, update, delete: if false;
+    }
+  }
+}

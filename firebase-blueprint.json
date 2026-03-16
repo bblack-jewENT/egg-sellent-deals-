@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "EmailMessage": {
+      "title": "Email Message",
+      "description": "An email message to be sent via Firebase Trigger Email extension.",
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string",
+          "format": "email",
+          "description": "The recipient's email address."
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "subject": {
+              "type": "string"
+            },
+            "html": {
+              "type": "string"
+            }
+          },
+          "required": ["subject", "html"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["to", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/mail/{mailId}": {
+      "schema": {
+        "$ref": "#/entities/EmailMessage"
+      },
+      "description": "Emails to be sent."
+    }
+  }
+}
