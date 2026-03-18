@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
+import eggsImg from "../img/eggs.jpeg";
+import meatyBonesImg from "../img/meaty bones.jpeg";
 
 // Product data
 const products = [
@@ -28,7 +30,7 @@ const products = [
     currency: "R",
     description:
       "Large, fresh eggs straight from the farm. Perfect for baking and breakfast.",
-    image: "img/eggs.jpeg",
+    image: eggsImg,
     quantity: 0,
   },
   {
@@ -38,7 +40,7 @@ const products = [
     currency: "R",
     description:
       "High-quality meaty bones, great for making rich soups and stews.",
-    image: "img/meaty bones.jpeg",
+    image: meatyBonesImg,
     quantity: 0,
   },
   {
