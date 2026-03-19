@@ -45,17 +45,42 @@ const products = [
   },
   {
     id: 3,
-    name: "iPhone 14 (128GB)",
+    name: "iPhone",
     price: 12000,
     currency: "R",
     description:
-      "Brand new iPhone 14. Easy to use, great camera to take pictures of the grandchildren.",
+      "Brand new iPhone. Easy to use, great camera to take pictures of the grandchildren.",
     image:
       "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800",
     quantity: 0,
   },
 ];
 
+// iPhone variants with pricing and availability
+const iphoneVariants = [
+  { id: 1, name: "iPhone 17 Pro Max", price: 18000, available: true },
+  { id: 2, name: "iPhone 17 Pro", price: 16500, available: true },
+  { id: 3, name: "iPhone 17", price: 14500, available: false },
+  { id: 4, name: "iPhone 16 Pro Max", price: 17000, available: true },
+  { id: 5, name: "iPhone 16 Pro", price: 15500, available: true },
+  { id: 6, name: "iPhone 16", price: 13500, available: false },
+  { id: 7, name: "iPhone 15 Pro Max", price: 16000, available: true },
+  { id: 8, name: "iPhone 15 Pro", price: 14500, available: true },
+  { id: 9, name: "iPhone 15", price: 12500, available: true },
+  { id: 10, name: "iPhone 14 Pro Max", price: 15000, available: true },
+  { id: 11, name: "iPhone 14 Pro", price: 13500, available: false },
+  { id: 12, name: "iPhone 14 (128GB)", price: 12000, available: true },
+  { id: 13, name: "iPhone 14 (256GB)", price: 14000, available: false },
+  { id: 14, name: "iPhone 13 Pro Max", price: 14000, available: true },
+  { id: 15, name: "iPhone 13 Pro", price: 12500, available: true },
+  { id: 16, name: "iPhone 13", price: 10500, available: true },
+  { id: 17, name: "iPhone 12 Pro Max", price: 13000, available: false },
+  { id: 18, name: "iPhone 12 Pro", price: 11500, available: true },
+  { id: 19, name: "iPhone 12", price: 9500, available: true },
+  { id: 20, name: "iPhone 11 Pro Max", price: 12000, available: true },
+  { id: 21, name: "iPhone 11 Pro", price: 10500, available: false },
+  { id: 22, name: "iPhone 11", price: 8500, available: true },
+];
 type Product = (typeof products)[0];
 type CartItem = { product: Product; quantity: number };
 type DeliveryOption = "standard" | "express";
@@ -105,6 +130,8 @@ export default function App() {
     rating: number;
     comment: string;
   }>({ rating: 5, comment: "" });
+  const [selectedIphoneVariant, setSelectedIphoneVariant] =
+    useState<number>(12); // Default to iPhone 14 (128GB)
 
   useEffect(() => {
     const savedOrders = localStorage.getItem("pastOrders");
@@ -134,16 +161,36 @@ export default function App() {
   };
 
   const addToCart = (product: Product) => {
+    // For iPhone, use selected variant details
+    let cartProduct = product;
+    if (product.id === 3) {
+      const selectedVariant = iphoneVariants.find(
+        (v) => v.id === selectedIphoneVariant,
+      );
+      if (selectedVariant) {
+        cartProduct = {
+          ...product,
+          name: selectedVariant.name,
+          price: selectedVariant.price,
+        };
+      }
+    }
+
     setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+      const existing = prev.find(
+        (item) =>
+          item.product.id === cartProduct.id &&
+          item.product.name === cartProduct.name,
+      );
       if (existing) {
         return prev.map((item) =>
-          item.product.id === product.id
+          item.product.id === cartProduct.id &&
+          item.product.name === cartProduct.name
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
       }
-      return [...prev, { product, quantity: 1 }];
+      return [...prev, { product: cartProduct, quantity: 1 }];
     });
   };
 
@@ -762,10 +809,60 @@ export default function App() {
                             {product.description}
                           </p>
 
+                          {/* iPhone Model Selector */}
+                          {product.id === 3 && (
+                            <div className="mb-4">
+                              <label className="block text-sm font-medium text-zinc-700 mb-2">
+                                Select Model:
+                              </label>
+                              <div className="relative">
+                                <select
+                                  value={selectedIphoneVariant}
+                                  onChange={(e) =>
+                                    setSelectedIphoneVariant(
+                                      Number(e.target.value),
+                                    )
+                                  }
+                                  className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer hover:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                                >
+                                  {iphoneVariants.map((variant) => (
+                                    <option key={variant.id} value={variant.id}>
+                                      {variant.name} - R{variant.price}
+                                    </option>
+                                  ))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                              </div>
+                              <div className="mt-2 flex items-center gap-2">
+                                {iphoneVariants.find(
+                                  (v) => v.id === selectedIphoneVariant,
+                                )?.available ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                                    <span className="text-sm font-semibold text-emerald-600">
+                                      Available
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <X className="w-4 h-4 text-red-600" />
+                                    <span className="text-sm font-semibold text-red-600">
+                                      Out of Stock
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
                           <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-100 mb-4">
                             <span className="text-2xl font-bold text-zinc-900">
                               {product.currency}
-                              {product.price}
+                              {product.id === 3
+                                ? iphoneVariants.find(
+                                    (v) => v.id === selectedIphoneVariant,
+                                  )?.price || product.price
+                                : product.price}
                             </span>
                             <button
                               onClick={() => addToCart(product)}
