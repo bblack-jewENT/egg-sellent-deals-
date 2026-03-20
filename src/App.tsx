@@ -329,6 +329,32 @@ export default function App() {
     }
 
     setCart((prev) => {
+      // If adding an iPhone, update any existing iPhone cart item to the
+      // selected variant (so image/price change), then increment quantity.
+      if (cartProduct.id === 3) {
+        const existingById = prev.find(
+          (item) => item.product.id === cartProduct.id,
+        );
+        if (existingById) {
+          return prev.map((item) =>
+            item.product.id === cartProduct.id
+              ? {
+                  ...item,
+                  product: {
+                    ...item.product,
+                    name: cartProduct.name,
+                    price: cartProduct.price,
+                    image: cartProduct.image,
+                  },
+                  quantity: item.quantity + 1,
+                }
+              : item,
+          );
+        }
+        return [...prev, { product: cartProduct, quantity: 1 }];
+      }
+
+      // Default behaviour for other products: match by id+name (variants create separate lines)
       const existing = prev.find(
         (item) =>
           item.product.id === cartProduct.id &&
@@ -1286,7 +1312,7 @@ export default function App() {
                         {item.product.name}
                       </span>
                       <span className="font-medium text-zinc-900">
-                        R{item.product.price * item.quantity}
+                        R{(Number(item.product.price) || 0) * item.quantity}
                       </span>
                     </div>
                   ))}
