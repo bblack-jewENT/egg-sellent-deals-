@@ -956,7 +956,7 @@ export default function App() {
                                 >
                                   {iphoneVariants.map((variant) => (
                                     <option key={variant.id} value={variant.id}>
-                                      {variant.name} - R{variant.price}
+                                      {variant.name} - {variant.price}
                                     </option>
                                   ))}
                                 </select>
