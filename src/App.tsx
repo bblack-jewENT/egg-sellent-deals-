@@ -210,6 +210,11 @@ const meatyBonesVariants = [
   { id: 1, weight: "4kg", price: 210, available: true },
   { id: 2, weight: "5kg", price: 250, available: true },
 ];
+// Eggs variants
+const eggsVariants = [
+  { id: 1, label: "1 Tray of 30", price: 75, available: true },
+  { id: 2, label: "12 Trays of 30", price: 800, available: true },
+];
 type Product = (typeof products)[0];
 type CartItem = { product: Product; quantity: number };
 type DeliveryOption = "standard" | "express";
@@ -263,6 +268,7 @@ export default function App() {
     useState<number>(12); // Default to iPhone 14 (128GB)
   const [selectedMeatyBonesVariant, setSelectedMeatyBonesVariant] =
     useState<number>(1); // Default to 4kg
+  const [selectedEggsVariant, setSelectedEggsVariant] = useState<number>(1); // Default to 1 Tray of 30
 
   useEffect(() => {
     const savedOrders = localStorage.getItem("pastOrders");
@@ -1006,6 +1012,52 @@ export default function App() {
                             </div>
                           )}
 
+                          {/* Eggs Package Selector */}
+                          {product.id === 1 && (
+                            <div className="mb-4">
+                              <label className="block text-sm font-medium text-zinc-700 mb-2">
+                                Select Package:
+                              </label>
+                              <div className="relative">
+                                <select
+                                  value={selectedEggsVariant}
+                                  onChange={(e) =>
+                                    setSelectedEggsVariant(
+                                      Number(e.target.value),
+                                    )
+                                  }
+                                  className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer hover:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                                >
+                                  {eggsVariants.map((variant) => (
+                                    <option key={variant.id} value={variant.id}>
+                                      {variant.label} - R{variant.price}
+                                    </option>
+                                  ))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                              </div>
+                              <div className="mt-2 flex items-center gap-2">
+                                {eggsVariants.find(
+                                  (v) => v.id === selectedEggsVariant,
+                                )?.available ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                                    <span className="text-sm font-semibold text-emerald-600">
+                                      Available
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <X className="w-4 h-4 text-red-600" />
+                                    <span className="text-sm font-semibold text-red-600">
+                                      Out of Stock
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
                           {/* Meaty Bones Size Selector */}
                           {product.id === 2 && (
                             <div className="mb-4">
@@ -1063,7 +1115,11 @@ export default function App() {
                                   ? meatyBonesVariants.find(
                                       (v) => v.id === selectedMeatyBonesVariant,
                                     )?.price || product.price
-                                  : product.price}
+                                  : product.id === 1
+                                    ? eggsVariants.find(
+                                        (v) => v.id === selectedEggsVariant,
+                                      )?.price || product.price
+                                    : product.price}
                             </span>
                             <button
                               onClick={() => addToCart(product)}
