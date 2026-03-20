@@ -204,6 +204,12 @@ const iphoneVariants = [
     image: iphone11BlackImg,
   },
 ];
+
+// Meaty bones variants
+const meatyBonesVariants = [
+  { id: 1, weight: "4kg", price: 210, available: true },
+  { id: 2, weight: "5kg", price: 250, available: true },
+];
 type Product = (typeof products)[0];
 type CartItem = { product: Product; quantity: number };
 type DeliveryOption = "standard" | "express";
@@ -255,6 +261,8 @@ export default function App() {
   }>({ rating: 5, comment: "" });
   const [selectedIphoneVariant, setSelectedIphoneVariant] =
     useState<number>(12); // Default to iPhone 14 (128GB)
+  const [selectedMeatyBonesVariant, setSelectedMeatyBonesVariant] =
+    useState<number>(1); // Default to 4kg
 
   useEffect(() => {
     const savedOrders = localStorage.getItem("pastOrders");
@@ -294,6 +302,20 @@ export default function App() {
         cartProduct = {
           ...product,
           name: selectedVariant.name,
+          price: selectedVariant.price,
+        };
+      }
+    }
+
+    // For Meaty Bones, attach selected weight and price
+    if (product.id === 2) {
+      const selectedVariant = meatyBonesVariants.find(
+        (v) => v.id === selectedMeatyBonesVariant,
+      );
+      if (selectedVariant) {
+        cartProduct = {
+          ...product,
+          name: `${product.name} (${selectedVariant.weight})`,
           price: selectedVariant.price,
         };
       }
@@ -984,6 +1006,52 @@ export default function App() {
                             </div>
                           )}
 
+                          {/* Meaty Bones Size Selector */}
+                          {product.id === 2 && (
+                            <div className="mb-4">
+                              <label className="block text-sm font-medium text-zinc-700 mb-2">
+                                Select Size:
+                              </label>
+                              <div className="relative">
+                                <select
+                                  value={selectedMeatyBonesVariant}
+                                  onChange={(e) =>
+                                    setSelectedMeatyBonesVariant(
+                                      Number(e.target.value),
+                                    )
+                                  }
+                                  className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-900 appearance-none cursor-pointer hover:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                                >
+                                  {meatyBonesVariants.map((variant) => (
+                                    <option key={variant.id} value={variant.id}>
+                                      {variant.weight} - R{variant.price}
+                                    </option>
+                                  ))}
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                              </div>
+                              <div className="mt-2 flex items-center gap-2">
+                                {meatyBonesVariants.find(
+                                  (v) => v.id === selectedMeatyBonesVariant,
+                                )?.available ? (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                                    <span className="text-sm font-semibold text-emerald-600">
+                                      Available
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <X className="w-4 h-4 text-red-600" />
+                                    <span className="text-sm font-semibold text-red-600">
+                                      Out of Stock
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
                           <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-100 mb-4">
                             <span className="text-2xl font-bold text-zinc-900">
                               {product.currency}
@@ -991,7 +1059,11 @@ export default function App() {
                                 ? iphoneVariants.find(
                                     (v) => v.id === selectedIphoneVariant,
                                   )?.price || product.price
-                                : product.price}
+                                : product.id === 2
+                                  ? meatyBonesVariants.find(
+                                      (v) => v.id === selectedMeatyBonesVariant,
+                                    )?.price || product.price
+                                  : product.price}
                             </span>
                             <button
                               onClick={() => addToCart(product)}
