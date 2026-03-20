@@ -308,7 +308,8 @@ export default function App() {
         cartProduct = {
           ...product,
           name: selectedVariant.name,
-          price: selectedVariant.price,
+          price: selectedVariant.price ?? product.price,
+          image: selectedVariant.image ?? product.image,
         };
       }
     }
@@ -361,7 +362,7 @@ export default function App() {
   };
 
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + (Number(item.product.price) || 0) * item.quantity,
     0,
   );
   const deliveryCost = DELIVERY_COSTS[delivery];
@@ -398,7 +399,8 @@ export default function App() {
       // Send email via Firebase Trigger Email extension
       let htmlContent = `<h1>Thank you for your order!</h1><p>Your order total is R${total} (including R${deliveryCost} for ${delivery} delivery).</p><ul>`;
       cart.forEach((item) => {
-        htmlContent += `<li>${item.quantity}x ${item.product.name} - R${item.product.price * item.quantity}</li>`;
+        const lineTotal = (Number(item.product.price) || 0) * item.quantity;
+        htmlContent += `<li>${item.quantity}x ${item.product.name} - R${lineTotal}</li>`;
       });
       htmlContent += `</ul>`;
 
@@ -634,7 +636,8 @@ export default function App() {
 
                             <div className="w-20 text-right font-semibold text-zinc-900">
                               {item.product.currency}
-                              {item.product.price * item.quantity}
+                              {(Number(item.product.price) || 0) *
+                                item.quantity}
                             </div>
 
                             <button
@@ -875,7 +878,9 @@ export default function App() {
                               </p>
                             </div>
                             <div className="text-sm font-medium text-zinc-900">
-                              R{item.product.price * item.quantity}
+                              R
+                              {(Number(item.product.price) || 0) *
+                                item.quantity}
                             </div>
                           </li>
                         ))}
