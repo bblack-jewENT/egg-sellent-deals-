@@ -18,22 +18,22 @@ import {
 } from "lucide-react";
 import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
-import eggsImg from "./img/eggs.jpeg";
-import meatyBonesImg from "./img/meaty bones.jpeg";
-import iphone17ProMaxImg from "./img/Apple-iPhone-17-Pro-Max.webp";
-import iphone17LavenderImg from "./img/iphone_17_lavender.webp";
-import iphone16ProMaxImg from "./img/iphone_16_pro_max.webp";
-import iphone16Img from "./img/iPhone_16.jpg";
-import iphone15ProMaxImg from "./img/IPHONE15pro-max.webp";
-import iphone15Img from "./img/iphone_15.webp";
-import iphone14ProMaxImg from "./img/iPhone14ProMax.webp";
-import iphone14Img from "./img/iPhone-14.webp";
-import iphone13ProGreenImg from "./img/iphone13ProGreen.webp";
-import iphone13MidnightImg from "./img/iPhone_13_Midnight.jpg";
-import iphone12ProMaxImg from "./img/iPhone_12_Pro_Max.webp";
-import iphone12Img from "./img/iphone-12.jpg";
-import iphone11ProMaxImg from "/public/img/iPhone-11-Pro-Max.jpg";
-import iphone11BlackImg from "public/img/iPhone_11_black.webp";
+const eggsImg = "/img/eggs.jpeg";
+const meatyBonesImg = "/img/meaty-bones.jpeg";
+const iphone17ProMaxImg = "/img/Apple-iPhone-17-Pro-Max.webp";
+const iphone17LavenderImg = "/img/iphone_17_lavender.webp";
+const iphone16ProMaxImg = "/img/iphone_16_pro_max.webp";
+const iphone16Img = "/img/iPhone_16.jpg";
+const iphone15ProMaxImg = "/img/IPHONE15pro-max.webp";
+const iphone15Img = "/img/iphone_15.webp";
+const iphone14ProMaxImg = "/img/iPhone14ProMax.webp";
+const iphone14Img = "/img/iPhone-14.webp";
+const iphone13ProGreenImg = "/img/iphone13ProGreen.webp";
+const iphone13MidnightImg = "/img/iPhone_13_Midnight.jpg";
+const iphone12ProMaxImg = "/img/iPhone_12_Pro_Max.webp";
+const iphone12Img = "/img/iphone-12.jpg";
+const iphone11ProMaxImg = "/img/iPhone-11-Pro-Max.jpg";
+const iphone11BlackImg = "/img/iPhone_11_black.webp";
 
 // Product data
 const products = [
