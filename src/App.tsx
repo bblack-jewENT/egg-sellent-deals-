@@ -20,6 +20,20 @@ import { db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 import eggsImg from "../img/eggs.jpeg";
 import meatyBonesImg from "../img/meaty bones.jpeg";
+import iphone17ProMaxImg from "../img/Apple-iPhone-17-Pro-Max.webp";
+import iphone17LavenderImg from "../img/iphone_17_lavender.webp";
+import iphone16ProMaxImg from "../img/iphone_16_pro_max.webp";
+import iphone16Img from "../img/iPhone_16.jpg";
+import iphone15ProMaxImg from "../img/IPHONE15pro-max.webp";
+import iphone15Img from "../img/iPhone_15.webp";
+import iphone14ProMaxImg from "../img/iPhone14ProMax.webp";
+import iphone14Img from "../img/iPhone-14.webp";
+import iphone13ProGreenImg from "../img/iphone13ProGreen.webp";
+import iphone13MidnightImg from "../img/iPhone_13_Midnight.jpg";
+import iphone12ProMaxImg from "../img/iPhone_12_Pro_Max.webp";
+import iphone12Img from "../img/iphone-12.jpg";
+import iphone11ProMaxImg from "../img/iPhone-11-Pro-Max.jpg";
+import iphone11BlackImg from "../img/iPhone_11_black.webp";
 
 // Product data
 const products = [
@@ -46,8 +60,7 @@ const products = [
   {
     id: 3,
     name: "iPhone",
-    price: 12000,
-    currency: "R",
+    price: "Price on Order",
     description:
       "Brand new iPhone. Easy to use, great camera to take pictures of the grandchildren.",
     image:
@@ -61,156 +74,134 @@ const iphoneVariants = [
   {
     id: 1,
     name: "iPhone 17 Pro Max",
-    price: 18000,
     available: true,
-    image: "img/Apple-iPhone-17-Pro-Max.webp",
+    image: iphone17ProMaxImg,
   },
   {
     id: 2,
     name: "iPhone 17 Pro",
-    price: 16500,
     available: true,
-    image: "img/Apple-iPhone-17-Pro-Max.webp",
+    image: iphone17ProMaxImg,
   },
   {
     id: 3,
     name: "iPhone 17",
-    price: 14500,
     available: false,
-    image: "img/iphone_17_lavendar.webp",
+    image: iphone17LavenderImg,
   },
   {
     id: 4,
     name: "iPhone 16 Pro Max",
-    price: 17000,
     available: true,
-    image: "img/iphone_16_pro_max.webp",
+    image: iphone16ProMaxImg,
   },
   {
     id: 5,
     name: "iPhone 16 Pro",
-    price: 15500,
     available: true,
-    image: "img/iphone_16_pro_max.webp",
+    image: iphone16ProMaxImg,
   },
   {
     id: 6,
     name: "iPhone 16",
-    price: 13500,
     available: false,
-    image: "img/iPhone_16.jpg",
+    image: iphone16Img,
   },
   {
     id: 7,
     name: "iPhone 15 Pro Max",
-    price: 16000,
     available: true,
-    image: "img/IPHONE15pro-max.webp",
+    image: iphone15ProMaxImg,
   },
   {
     id: 8,
     name: "iPhone 15 Pro",
-    price: 14500,
     available: true,
-    image: "img/IPHONE15pro-max.webp",
+    image: iphone15ProMaxImg,
   },
   {
     id: 9,
     name: "iPhone 15",
-    price: 12500,
     available: true,
-    image: "img/iPhone_15.webp",
+    image: iphone15Img,
   },
   {
     id: 10,
     name: "iPhone 14 Pro Max",
-    price: 15000,
     available: true,
-    image: "img/iPhone14ProMax.webp",
+    image: iphone14ProMaxImg,
   },
   {
     id: 11,
     name: "iPhone 14 Pro",
-    price: 13500,
     available: false,
-    image: "img/iPhone14ProMax.webp",
+    image: iphone14ProMaxImg,
   },
   {
     id: 12,
     name: "iPhone 14 (128GB)",
-    price: 12000,
     available: true,
-    image: "img/iPhone-14.webp",
+    image: iphone14Img,
   },
   {
     id: 13,
     name: "iPhone 14 (256GB)",
-    price: 14000,
     available: false,
-    image: "img/iPhone-14.webp",
+    image: iphone14Img,
   },
   {
     id: 14,
     name: "iPhone 13 Pro Max",
-    price: 14000,
     available: true,
-    image: "img/iphone13ProGreen.webp",
+    image: iphone13ProGreenImg,
   },
   {
     id: 15,
     name: "iPhone 13 Pro",
-    price: 12500,
     available: true,
-    image: "img/iphone13ProGreen.webp",
+    image: iphone13ProGreenImg,
   },
   {
     id: 16,
     name: "iPhone 13",
-    price: 10500,
     available: true,
-    image: "img/iPhone_13_Midnight.jpg",
+    image: iphone13MidnightImg,
   },
   {
     id: 17,
     name: "iPhone 12 Pro Max",
-    price: 13000,
     available: false,
-    image: "img/iPhone_12_Pro_Max.webp",
+    image: iphone12ProMaxImg,
   },
   {
     id: 18,
     name: "iPhone 12 Pro",
-    price: 11500,
     available: true,
-    image: "img/iPhone_12_Pro_Max.webp",
+    image: iphone12ProMaxImg,
   },
   {
     id: 19,
     name: "iPhone 12",
-    price: 9500,
     available: true,
-    image: "img/iphone-12.jpg",
+    image: iphone12Img,
   },
   {
     id: 20,
     name: "iPhone 11 Pro Max",
-    price: 12000,
     available: true,
-    image: "img/iPhone-11-Pro-Max.jpg",
+    image: iphone11ProMaxImg,
   },
   {
     id: 21,
     name: "iPhone 11 Pro",
-    price: 10500,
     available: false,
-    image: "img/iPhone-11-Pro-Max.jpg",
+    image: iphone11ProMaxImg,
   },
   {
     id: 22,
     name: "iPhone 11",
-    price: 8500,
     available: true,
-    image: "img/iPhone_11_black.webp",
+    image: iphone11BlackImg,
   },
 ];
 type Product = (typeof products)[0];
