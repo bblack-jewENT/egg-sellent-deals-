@@ -10,6 +10,7 @@ import {
   Star,
   Truck,
   Package,
+  Phone,
   ChevronDown,
   ChevronUp,
   MessageSquare,
@@ -632,8 +633,20 @@ export default function App() {
                               {item.product.name}
                             </h3>
                             <p className="text-sm text-zinc-500 mb-4 sm:mb-0">
-                              {item.product.currency}
-                              {item.product.price} each
+                              {!isNaN(Number(item.product.price)) ? (
+                                <>
+                                  {item.product.currency}
+                                  {item.product.price} each
+                                </>
+                              ) : (
+                                <a
+                                  href="tel:0685034926"
+                                  className="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline"
+                                >
+                                  Call for Price
+                                  <Phone className="w-4 h-4" />
+                                </a>
+                              )}
                             </p>
                           </div>
 
@@ -962,6 +975,21 @@ export default function App() {
                     const prodReviews = reviews[product.id] || [];
                     const isExpanded = expandedReviews.includes(product.id);
 
+                    const selectedVariantPrice =
+                      product.id === 3
+                        ? (iphoneVariants.find(
+                            (v) => v.id === selectedIphoneVariant,
+                          )?.price ?? product.price)
+                        : product.id === 2
+                          ? (meatyBonesVariants.find(
+                              (v) => v.id === selectedMeatyBonesVariant,
+                            )?.price ?? product.price)
+                          : product.id === 1
+                            ? (eggsVariants.find(
+                                (v) => v.id === selectedEggsVariant,
+                              )?.price ?? product.price)
+                            : product.price;
+
                     return (
                       <article
                         key={product.id}
@@ -1137,20 +1165,20 @@ export default function App() {
 
                           <div className="flex items-center justify-between mt-auto pt-4 border-t border-zinc-100 mb-4">
                             <span className="text-2xl font-bold text-zinc-900">
-                              {product.currency}
-                              {product.id === 3
-                                ? iphoneVariants.find(
-                                    (v) => v.id === selectedIphoneVariant,
-                                  )?.price || product.price
-                                : product.id === 2
-                                  ? meatyBonesVariants.find(
-                                      (v) => v.id === selectedMeatyBonesVariant,
-                                    )?.price || product.price
-                                  : product.id === 1
-                                    ? eggsVariants.find(
-                                        (v) => v.id === selectedEggsVariant,
-                                      )?.price || product.price
-                                    : product.price}
+                              {!isNaN(Number(selectedVariantPrice)) ? (
+                                <>
+                                  {product.currency}
+                                  {selectedVariantPrice}
+                                </>
+                              ) : (
+                                <a
+                                  href="tel:0685034926"
+                                  className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-lg"
+                                >
+                                  Call for Price
+                                  <Phone className="w-4 h-4" />
+                                </a>
+                              )}
                             </span>
                             <button
                               onClick={() => addToCart(product)}
