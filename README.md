@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="img/banner-final.png" />
+<img width="1200" height="475" alt="GHBanner" src="public/img/banner-final.png" />
 </div>
 
 1. Install dependencies:
