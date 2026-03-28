@@ -229,6 +229,11 @@ type Order = {
   total: number;
   delivery: DeliveryOption;
   status: OrderStatus;
+  deliveryAddress: {
+    location: string;
+    street: string;
+    address: string;
+  };
 };
 type Review = { id: string; rating: number; comment: string; date: string };
 type ViewState = "shop" | "cart" | "success" | "orders";
@@ -254,6 +259,9 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [email, setEmail] = useState("");
+  const [location, setLocation] = useState("");
+  const [streetName, setStreetName] = useState("");
+  const [address, setAddress] = useState("");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [delivery, setDelivery] = useState<DeliveryOption>("standard");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -401,6 +409,20 @@ export default function App() {
       alert("Please enter a valid email address so we can send your receipt.");
       return;
     }
+    if (!location.trim()) {
+      alert(
+        "Please enter your location (city/suburb). I need this to deliver.",
+      );
+      return;
+    }
+    if (!streetName.trim()) {
+      alert("Please enter your street name.");
+      return;
+    }
+    if (!address.trim()) {
+      alert("Please enter your full address or house number.");
+      return;
+    }
     setShowConfirmDialog(true);
   };
 
@@ -418,6 +440,11 @@ export default function App() {
         total,
         delivery,
         status: "Processing",
+        deliveryAddress: {
+          location: location,
+          street: streetName,
+          address: address,
+        },
       };
       const updatedOrders = [newOrder, ...pastOrders];
       setPastOrders(updatedOrders);
@@ -430,6 +457,7 @@ export default function App() {
         htmlContent += `<li>${item.quantity}x ${item.product.name} - R${lineTotal}</li>`;
       });
       htmlContent += `</ul>`;
+      htmlContent += `<h3>Delivery Details</h3><p>Location: ${location}</p><p>Street: ${streetName}</p><p>Address: ${address}</p>`;
 
       await addDoc(collection(db, "mail"), {
         to: email,
@@ -787,7 +815,40 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-zinc-700 mb-2">
+                        Location (City / Suburb)
+                      </label>
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="e.g., Cape Town, Durban"
+                        className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm mb-3"
+                      />
+
+                      <label className="block text-sm font-medium text-zinc-700 mb-2">
+                        Street Name
+                      </label>
+                      <input
+                        type="text"
+                        value={streetName}
+                        onChange={(e) => setStreetName(e.target.value)}
+                        placeholder="Street name"
+                        className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm mb-3"
+                      />
+
+                      <label className="block text-sm font-medium text-zinc-700 mb-2">
+                        Address / House No.
+                      </label>
+                      <input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="House number, building, unit"
+                        className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm mb-3"
+                      />
+
                       <label
                         htmlFor="email"
                         className="block text-sm font-medium text-zinc-700 mb-2"
@@ -1317,13 +1378,29 @@ export default function App() {
                     <span className="text-zinc-500">Email:</span>{" "}
                     <span className="font-medium text-zinc-900">{email}</span>
                   </p>
-                  <p>
+                  <p className="mb-1">
                     <span className="text-zinc-500">Delivery:</span>{" "}
                     <span className="font-medium text-zinc-900">
                       {delivery === "express"
                         ? "Express (1-2 Days)"
                         : "Standard (3-5 Days)"}
                     </span>
+                  </p>
+                  <p className="mb-1">
+                    <span className="text-zinc-500">Location:</span>{" "}
+                    <span className="font-medium text-zinc-900">
+                      {location}
+                    </span>
+                  </p>
+                  <p className="mb-1">
+                    <span className="text-zinc-500">Street:</span>{" "}
+                    <span className="font-medium text-zinc-900">
+                      {streetName}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="text-zinc-500">Address:</span>{" "}
+                    <span className="font-medium text-zinc-900">{address}</span>
                   </p>
                 </div>
 
